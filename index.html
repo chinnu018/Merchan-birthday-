@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0,
+               maximum-scale=1.0, user-scalable=no">
+
+<title>Birthday Surprise — Merchan</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100%;
+    font-family: Arial, sans-serif;
+    background: #09000f;
+    color: white;
+    overflow-x: hidden;
+}
+
+body {
+    background:
+        radial-gradient(circle at 20% 20%, #4b104f 0%, transparent 35%),
+        radial-gradient(circle at 80% 80%, #35104d 0%, transparent 35%),
+        #09000f;
+}
+
+/* =========================
+   GENERAL
+========================= */
+
+.page {
+    min-height: 100vh;
+    width: 100%;
+    padding: 25px 20px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    position: relative;
+}
+
+.page.active {
+    display: flex;
+}
+
+h1 {
+    font-size: clamp(30px, 9vw, 50px);
+    line-height: 1.15;
+}
+
+h2 {
+    font-size: 25px;
+    margin-bottom: 15px;
+}
+
+p {
+    font-size: 16px;
+    line-height: 1.7;
+    color: #f6dff1;
+}
+
+button {
+    width: min(90%, 320px);
+    min-height: 54px;
+    margin-top: 25px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #ff4fa3, #b83cff);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    box-shadow: 0 10px 30px #ff3e9a33;
+    cursor: pointer;
+    transition: transform .2s ease;
+}
+
+button:active {
+    transform: scale(.95);
+}
+
+/* =========================
+   PAGE 1
+========================= */
+
+.code-icon {
+    font-size: 65px;
+    margin-bottom: 20px;
+}
+
+.small {
+    font-size: 13px;
+    color: #c9a7c8;
+    margin-top: 10px;
+}
+
+.loader {
+    width: 85%;
+    max-width: 300px;
+    height: 7px;
+    margin-top: 25px;
+    background: #ffffff18;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.loader-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #ff4fa3, #c84cff);
+    animation: loading 3s forwards;
+}
+
+@keyframes loading {
+    to {
+        width: 100%;
+    }
+}
+
+/* =========================
+   PAGE 2
+========================= */
+
+.glow {
+    color: #ff76bd;
+    text-shadow:
+        0 0 10px #ff3e9a,
+        0 0 35px #ff3e9a66;
+}
+
+.star-big {
+    font-size: 75px;
+    animation: floatStar 2s ease-in-out infinite;
+}
+
+@keyframes floatStar {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-10px) rotate(5deg);
+    }
+}
+
+/* =========================
+   PAGE 3 — CAKE
+========================= */
+
+.cake-area {
+    margin-top: 60px;
+    position: relative;
+    width: 230px;
+    height: 190px;
+}
+
+.cake-bottom,
+.cake-middle,
+.cake-top {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 15px;
+    background: linear-gradient(#ff86c8, #db398b);
+    box-shadow: inset 0 -8px 12px #8b145d55;
+}
+
+.cake-bottom {
+    width: 220px;
+    height: 55px;
+    bottom: 0;
+}
+
+.cake-middle {
+    width: 190px;
+    height: 50px;
+    bottom: 48px;
+}
+
+.cake-top {
+    width: 155px;
+    height: 45px;
+    bottom: 92px;
+}
+
+.candle {
+    position: absolute;
+    bottom: 137px;
+    width: 12px;
+    height: 45px;
+    background: repeating-linear-gradient(
+        45deg,
+        #ffffff,
+        #ffffff 5px,
+        #ffd166 5px,
+        #ffd166 9px
+    );
+    border-radius: 5px;
+    z-index: 3;
+    cursor: pointer;
+}
+
+.candle:nth-child(1) {
+    left: 65px;
+}
+
+.candle:nth-child(2) {
+    left: 110px;
+}
+
+.candle:nth-child(3) {
+    left: 155px;
+}
+
+.flame {
+    position: absolute;
+    width: 17px;
+    height: 25px;
+    left: -2px;
+    top: -23px;
+    background: #ffb300;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    animation: flicker .4s infinite alternate;
+    box-shadow: 0 0 15px #ffb30099;
+}
+
+@keyframes flicker {
+    from {
+        transform: rotate(-45deg) scale(1);
+    }
+
+    to {
+        transform: rotate(-45deg) scale(1.2);
+    }
+}
+
+.blown .flame {
+    display: none;
+}
+
+/* =========================
+   MESSAGE CARD
+========================= */
+
+.card {
+    width: 100%;
+    max-width: 500px;
+    padding: 28px 22px;
+    border-radius: 25px;
+    background: #ffffff0c;
+    border: 1px solid #ffffff1c;
+    box-shadow: 0 15px 50px #0005;
+    backdrop-filter: blur(12px);
+}
+
+.card-icon {
+    font-size: 55px;
+    margin-bottom: 15px;
+}
+
+.hidden {
+    display: none;
+}
+
+/* =========================
+   MEMORIES
+========================= */
+
+.memory {
+    width: 100%;
+    max-width: 500px;
+    padding: 18px;
+    margin-top: 15px;
+    border-radius: 18px;
+    background: #ffffff0b;
+    border: 1px solid #ffffff12;
+    text-align: left;
+}
+
+.memory b {
+    color: #ff75bb;
+}
+
+/* =========================
+   FINAL
+========================= */
+
+.final-star {
+    font-size: 80px;
+    animation: floatStar 2s ease-in-out infinite;
+}
+
+.signature {
+    margin-top: 25px;
+    font-size: 18px;
+    color: #ff78be;
+}
+
+/* =========================
+   FLOATING SYMBOLS
+========================= */
+
+.float {
+    position: fixed;
+    bottom: -40px;
+    pointer-events: none;
+    z-index: 20;
+    animation: floatUp linear forwards;
+}
+
+@keyframes floatUp {
+    to {
+        transform:
+            translateY(-110vh)
+            rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* =========================
+   CONFETTI
+========================= */
+
+.confetti {
+    position: fixed;
+    top: -20px;
+    width: 8px;
+    height: 14px;
+    z-index: 30;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform:
+            translateY(110vh)
+            rotate(720deg);
+    }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 400px) {
+
+    .cake-area {
+        transform: scale(.9);
+    }
+
+    .card {
+        padding: 25px 18px;
+    }
+
+    p {
+        font-size: 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+
+<!-- =========================
+     PAGE 1 — INTRO
+========================= -->
+
+<section class="page active" id="page1">
+
+    <div class="code-icon">🎁</div>
+
+    <h1>Getting Ready...</h1>
+
+    <p id="loadingText">
+        Preparing something special...
+    </p>
+
+    <div class="loader">
+        <div class="loader-bar"></div>
+    </div>
+
+    <p class="small">
+        Birthday surprise is loading...
+    </p>
+
+    <button onclick="go(2)">
+        Open The Surprise ✨
+    </button>
+
+</section>
+
+
+<!-- =========================
+     PAGE 2 — NAME
+========================= -->
+
+<section class="page" id="page2">
+
+    <div class="star-big">✨</div>
+
+    <p>Today's special person is...</p>
+
+    <h1 class="glow">
+        Merchan
+    </h1>
+
+    <p style="margin-top:15px;">
+        A good friend deserves a good birthday.
+        🎉
+    </p>
+
+    <button onclick="go(3)">
+        There's something for you →
+    </button>
+
+</section>
+
+
+<!-- =========================
+     PAGE 3 — CAKE
+========================= -->
+
+<section class="page" id="page3">
+
+    <h1>Make A Wish 🎂</h1>
+
+    <p>
+        Tap all three candles to blow them out.
+    </p>
+
+    <div class="cake-area">
+
+        <div class="candle" onclick="blow(this)">
+            <div class="flame"></div>
+        </div>
+
+        <div class="candle" onclick="blow(this)">
+            <div class="flame"></div>
+        </div>
+
+        <div class="candle" onclick="blow(this)">
+            <div class="flame"></div>
+        </div>
+
+        <div class="cake-top"></div>
+        <div class="cake-middle"></div>
+        <div class="cake-bottom"></div>
+
+    </div>
+
+    <p id="candleText">
+        3 candles still glowing 🕯️
+    </p>
+
+</section>
+
+
+<!-- =========================
+     PAGE 4 — MESSAGE
+========================= -->
+
+<section class="page" id="page4">
+
+    <div class="card">
+
+        <div class="card-icon">💌</div>
+
+        <h2>For A Great Friend</h2>
+
+        <p>
+            Happy Birthday, Merchan! 🎉
+            <br><br>
+
+            I hope this birthday brings you
+            plenty of reasons to smile,
+            good memories, peaceful days,
+            and lots of happiness.
+            <br><br>
+
+            Life is full of random moments,
+            unexpected jokes and unforgettable
+            memories — and I'm glad you're one
+            of the people who makes those moments
+            better.
+            <br><br>
+
+            Keep being yourself, keep laughing,
+            keep enjoying life, and make this
+            year one to remember. ✨
+        </p>
+
+        <button onclick="secretMessage()">
+            Psst... there's more 👀
+        </button>
+
+        <div id="secret" class="hidden">
+
+            <br>
+
+            <p>
+                Here's the secret message:
+                <br><br>
+
+                Thanks for being an awesome friend.
+                No matter how busy life gets,
+                I hope our friendship always has
+                a place for random conversations,
+                stupid jokes and great memories. 🤝
+            </p>
+
+        </div>
+
+    </div>
+
+    <button onclick="go(5)">
+        One more thing... ✨
+    </button>
+
+</section>
+
+
+<!-- =========================
+     PAGE 5 — MEMORIES
+========================= -->
+
+<section class="page" id="page5">
+
+    <h1>Little Things ✨</h1>
+
+    <p>
+        Because the best memories are usually
+        the random ones.
+    </p>
+
+    <div class="memory">
+
+        <b>01 — Favorite Memory</b>
+
+        <p>
+            meeting you is my most favourite memory.
+            Those moments when we met and laughed
+            together and we got close and everything
+            that happened. 😂
+        </p>
+
+    </div>
+
+    <div class="memory">
+
+        <b>02 — Friendship Moment</b>
+
+        <p>
+            All those random conversations,
+            jokes and moments that somehow
+            became good memories in just very
+            less days
+        </p>
+
+    </div>
+
+    <div class="memory">
+
+        <b>03 — One Wish</b>
+
+        <p>
+            I hope this year gives you new
+            experiences, great people and
+            countless reasons to smile and
+            our friendship stays all the life.
+        </p>
+
+    </div>
+
+    <button onclick="go(6)">
+        Final Surprise 🎁
+    </button>
+
+</section>
+
+
+<!-- =========================
+     PAGE 6 — FINAL
+========================= -->
+
+<section class="page" id="page6">
+
+    <div class="final-star">
+        🎉
+    </div>
+
+    <h1 class="glow">
+        HAPPY BIRTHDAY!
+    </h1>
+
+    <p style="margin-top:20px;">
+        May this year bring you
+        more happiness,
+        more adventures,
+        more laughs,
+        and memories worth keeping.
+    </p>
+
+    <div class="signature">
+        — From komal 🤝
+    </div>
+
+    <button onclick="celebrate()">
+        Celebrate 🎉
+    </button>
+
+</section>
+
+
+<script>
+
+/* =========================
+   PAGE NAVIGATION
+========================= */
+
+function go(number) {
+
+    document.querySelectorAll(".page")
+        .forEach(page => {
+            page.classList.remove("active");
+        });
+
+    document.getElementById("page" + number)
+        .classList.add("active");
+
+    window.scrollTo(0, 0);
+
+    createSymbols(8);
+}
+
+
+/* =========================
+   LOADING TEXT
+========================= */
+
+const texts = [
+    "Loading memories...",
+    "Preparing the cake...",
+    "Adding some happiness...",
+    "Checking birthday vibes...",
+    "Almost ready..."
+];
+
+let textIndex = 0;
+
+setInterval(() => {
+
+    if (textIndex < texts.length) {
+
+        document.getElementById("loadingText")
+            .innerText = texts[textIndex];
+
+        textIndex++;
+    }
+
+}, 650);
+
+
+/* =========================
+   CAKE CANDLES
+========================= */
+
+let candles = 3;
+
+function blow(candle) {
+
+    if (candle.classList.contains("blown"))
+        return;
+
+    candle.classList.add("blown");
+
+    candles--;
+
+    if (candles > 0) {
+
+        document.getElementById("candleText")
+            .innerText =
+            candles + " candles still glowing 🕯️";
+
+    } else {
+
+        document.getElementById("candleText")
+            .innerText =
+            "Wish made! ✨";
+
+        createSymbols(20);
+
+        setTimeout(() => {
+            go(4);
+        }, 1500);
+    }
+}
+
+
+/* =========================
+   SECRET MESSAGE
+========================= */
+
+function secretMessage() {
+
+    const secret =
+        document.getElementById("secret");
+
+    secret.classList.remove("hidden");
+
+    createSymbols(20);
+}
+
+
+/* =========================
+   FLOATING SYMBOLS
+========================= */
+
+function createSymbols(amount) {
+
+    for (let i = 0; i < amount; i++) {
+
+        setTimeout(() => {
+
+            const symbol =
+                document.createElement("div");
+
+            symbol.className = "float";
+
+            const symbols = [
+                "✨",
+                "⭐",
+                "🎉",
+                "🎈",
+                "◆",
+                "✦"
+            ];
+
+            symbol.innerText =
+                symbols[
+                    Math.floor(
+                        Math.random() * symbols.length
+                    )
+                ];
+
+            symbol.style.left =
+                Math.random() * 100 + "vw";
+
+            symbol.style.fontSize =
+                (16 + Math.random() * 25) + "px";
+
+            symbol.style.animationDuration =
+                (4 + Math.random() * 4) + "s";
+
+            document.body.appendChild(symbol);
+
+            setTimeout(() => {
+                symbol.remove();
+            }, 8000);
+
+        }, i * 100);
+    }
+}
+
+
+/* =========================
+   CONFETTI
+========================= */
+
+function celebrate() {
+
+    createSymbols(35);
+
+    for (let i = 0; i < 120; i++) {
+
+        setTimeout(() => {
+
+            const piece =
+                document.createElement("div");
+
+            piece.className = "confetti";
+
+            piece.style.left =
+                Math.random() * 100 + "vw";
+
+            piece.style.background =
+                [
+                    "#ff4fa3",
+                    "#ffd166",
+                    "#c77dff",
+                    "#8be9fd",
+                    "#ffffff"
+                ][
+                    Math.floor(Math.random() * 5)
+                ];
+
+            piece.style.animationDuration =
+                (2 + Math.random() * 3) + "s";
+
+            document.body.appendChild(piece);
+
+            setTimeout(() => {
+                piece.remove();
+            }, 5000);
+
+        }, i * 15);
+    }
+}
+
+</script>
+
+</body>
+</html>
